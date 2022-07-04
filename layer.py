@@ -69,7 +69,6 @@ class prop(nn.Module):
 
 
 class mixprop(nn.Module):
-    # original mixhop design
     def __init__(self, c_in, c_out, gdep, dropout, alpha):
         super(mixprop, self).__init__()
         self.nconv = nconv()
@@ -157,13 +156,12 @@ class dilated_inception(nn.Module):
             self.tconv.append(nn.Conv2d(cin, cout, (1, kern), dilation=(1, dilation_factor)))
 
     def forward(self, input):
-        # input.shape = (batch, cin, num_nodes, receptive_field)
         x = []
         for i in range(len(self.kernel_set)):
             x.append(self.tconv[i](input))
         for i in range(len(self.kernel_set)):
-            x[i] = x[i][..., -x[-1].size(3):]  # clip based on the seq length of the largest filter
-        x = torch.cat(x, dim=1)  # (batch, cout, num_nodes, new_seq_len)
+            x[i] = x[i][..., -x[-1].size(3):]
+        x = torch.cat(x, dim=1)
         return x
 
 
@@ -361,18 +359,15 @@ class CGPFunc(nn.Module):
         self.out = []
 
     def forward(self, t, x):
-
-        # symmetric normalize adj
         adj = self.adj + torch.eye(self.adj.size(0)).to(x.device)
         d = adj.sum(1)
         _d = torch.diag(torch.pow(d, -0.5))
         adj_norm = torch.mm(torch.mm(_d, adj), _d)
 
-        # ADGC
-        self.out.append(x)  # collect H_(t-1)
+        self.out.append(x)
         self.nfe += 1
         ax = self.nconv(x, adj_norm)
-        f = 0.5 * self.alpha * (ax - x)  # calculate H_(t)
+        f = 0.5 * self.alpha * (ax - x)
         return f
 
 
@@ -405,11 +400,10 @@ class CGPODEBlock(nn.Module):
                                      method=self.method, options=dict(step_size=self.step_size,
                                                                       perturb=self.perturb))
 
-        # attentive aggregation
-        outs = self.odefunc.out  # get pool
-        self.odefunc.out = []  # reset pool
+        outs = self.odefunc.out
+        self.odefunc.out = []
         outs.append(out[-1])
-        h_out = torch.cat(outs, dim=1)  # (batch, (NFE + 1) * hid, nodes, seq_len)
+        h_out = torch.cat(outs, dim=1)
         h_out = self.mlp(h_out)
 
         return h_out
@@ -438,9 +432,7 @@ class CGP(nn.Module):
                                   self.estimated_nfe)
 
     def forward(self, x, adj):
-        # set initial state
         self.CGPODE.set_x0(x)
-        # evolve "t" hops via given adjacency
         self.CGPODE.set_adj(adj)
         h = self.CGPODE(x, self.integration_time)
         return h

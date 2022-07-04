@@ -4,6 +4,10 @@
 
 This is the official PyTorch implementation of the paper "[Multivariate Time Series Forecasting with Dynamic Graph Neural ODEs](https://arxiv.org/pdf/2202.08408.pdf)".
 
+<p align="center">
+<img src="./figures/MTGODE.png" width="1200">
+</p>
+
 ## Dependencies
 
 ```
@@ -34,9 +38,12 @@ bash metr-la.sh
 + Option 2. Run the python files
   + To run on METR-LA:
   ```
-    python run_multi_step.py --data ./data/METR-LA --buildA_true --expid 0 --runs 1 --device cuda:6 --save_preds False --num_nodes 207 --epochs 200 --batch_size 64 --learning_rate 0.001 --weight_decay 0.0001 --lr_decay True --lr_decay_steps 100 --lr_decay_rate 0.1 --dropout 0.3 --node_dim 40 --subgraph_size 20 --num_split 1 --tanhalpha 3 --conv_channels 64 --end_channels 128 --solver_1 euler --time_1 1.0 --step_1 0.25 --solver_2 euler --time_2 1.0 --step_2 0.25 --alpha 2.0 --rtol 1e-4 --atol 1e-3 --adjoint False --perturb False
-   ```
+  python run_multi_step.py --data ./data/METR-LA --buildA_true True --expid 0 --runs 1 --device cuda:0 --save_preds False --num_nodes 207 --epochs 200 --batch_size 64 --learning_rate 0.001 --weight_decay 0.0001 --lr_decay True --lr_decay_steps 100 --lr_decay_rate 0.1 --dropout 0.3 --node_dim 40 --subgraph_size 20 --num_split 1 --tanhalpha 3 --conv_channels 64 --end_channels 128 --solver_1 euler --time_1 1.0 --step_1 0.25 --solver_2 euler --time_2 1.0 --step_2 0.25 --alpha 2.0 --rtol 1e-4 --atol 1e-3 --adjoint False --perturb False
+  ```
   + To run on Electricity (horizon=3):
+  ```
+  python run_single_step.py --data ./data/electricity.txt --expid 0 --runs 1 --device cuda:0 --save_preds False --num_nodes 321 --horizon 3 --epochs 60 --batch_size 4 --lr 0.001 --weight_decay 0.0001 --lr_decay True --lr_decay_steps '20,40' --lr_decay_rate 0.5 --dropout 0.3 --node_dim 40 --subgraph_size 20 --num_split 1 --tanhalpha 3 --conv_channels 64 --end_channels 64 --solver_1 euler --time_1 1.0 --step_1 0.2 --solver_2 euler --time_2 1.0 --step_2 0.5 --alpha 1.0 --rtol 1e-4 --atol 1e-3 --adjoint False --perturb False
+  ```
 
 ### Results
 Here we provide the results of the above two examples
@@ -63,6 +70,9 @@ final test rse 0.0728 | test rae 0.0415 | test corr 0.9431
 ```
 
 ## Cite us
+
+If you use this code in your research, please cite the following article:
+
 ```
 @article{jin2022multivariate,
   title={Multivariate Time Series Forecasting with Dynamic Graph Neural ODEs},

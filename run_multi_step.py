@@ -4,7 +4,7 @@ import numpy as np
 from util import *
 import torch.optim as optim
 from trainer import Trainer
-from model import DyGODE
+from model import MTGODE
 
 
 def str_to_bool(value):
@@ -66,7 +66,7 @@ parser.add_argument('--step_2', type=float, default=0.25, help='CGP step size')
 parser.add_argument('--alpha', type=float, default=2.0, help='eigen normalization')
 parser.add_argument('--rtol', type=float, default=1e-4, help='rtol')
 parser.add_argument('--atol', type=float, default=1e-3, help='atol')
-parser.add_argument('--adjoint', type=str_to_bool, default=False, help='')
+parser.add_argument('--adjoint', type=str_to_bool, default=False, help='whether to use adjoint method')
 parser.add_argument('--perturb', type=str_to_bool, default=False, help='')
 
 args = parser.parse_args()
@@ -84,7 +84,7 @@ def main(runid):
     predefined_A = torch.tensor(predefined_A) - torch.eye(args.num_nodes)  # remove self-loop cuz we do it later
     predefined_A = predefined_A.to(device)
 
-    model = DyGODE(buildA_true=args.buildA_true, num_nodes=args.num_nodes, device=device, predefined_A=predefined_A,
+    model = MTGODE(buildA_true=args.buildA_true, num_nodes=args.num_nodes, device=device, predefined_A=predefined_A,
                    dropout=args.dropout, subgraph_size=args.subgraph_size, node_dim=args.node_dim,
                    dilation_exponential=args.dilation_exponential, conv_channels=args.conv_channels,
                    end_channels=args.end_channels, seq_length=args.seq_in_len, in_dim=args.in_dim,
@@ -149,7 +149,7 @@ def main(runid):
         t2 = time.time()
         train_time.append(t2-t1)
 
-        # Validation after each epoch
+        # validation after each epoch
         valid_loss = []
         valid_mape = []
         valid_rmse = []

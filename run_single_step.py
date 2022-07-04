@@ -6,7 +6,7 @@ import torch.optim as optim
 
 from util import *
 # from trainer import Optim
-from model import DyGODE
+from model import MTGODE
 
 
 def str_to_bool(value):
@@ -69,7 +69,7 @@ parser.add_argument('--alpha', type=float, default=2.0, help='CGP alpha to contr
 parser.add_argument('--rtol', type=float, default=1e-4, help='rtol')
 parser.add_argument('--atol', type=float, default=1e-3, help='atol')
 parser.add_argument('--adjoint', type=str_to_bool, default=False, help='whether to use adjoint method')
-parser.add_argument('--perturb', type=str_to_bool, default=False, help='whether to use adjoint method')
+parser.add_argument('--perturb', type=str_to_bool, default=False, help='')
 
 args = parser.parse_args()
 device = torch.device(args.device)
@@ -198,7 +198,7 @@ def main(runid):
     # train 60%, valid 20%, test 20%
     Data = DataLoaderS(args.data, 0.6, 0.2, device, args.horizon, args.seq_in_len, args.normalize)
 
-    model = DyGODE(buildA_true=args.buildA_true, num_nodes=args.num_nodes, device=device,
+    model = MTGODE(buildA_true=args.buildA_true, num_nodes=args.num_nodes, device=device,
                    dropout=args.dropout, subgraph_size=args.subgraph_size, node_dim=args.node_dim,
                    dilation_exponential=args.dilation_exponential, conv_channels=args.conv_channels,
                    end_channels=args.end_channels, seq_length=args.seq_in_len, in_dim=args.in_dim,
