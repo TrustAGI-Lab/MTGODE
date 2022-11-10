@@ -2,7 +2,7 @@
 
 [![Arxiv link](https://img.shields.io/static/v1?label=arXiv&message=MTGODE&color=blue&logo=arxiv)](https://arxiv.org/pdf/2202.08408.pdf)
 
-This is the official PyTorch implementation of the paper "[Multivariate Time Series Forecasting with Dynamic Graph Neural ODEs](https://arxiv.org/pdf/2202.08408.pdf)".
+This is the official PyTorch implementation of the paper "[Multivariate Time Series Forecasting with Dynamic Graph Neural ODEs](https://arxiv.org/pdf/2202.08408.pdf)", accepted to IEEE Transactions on Knowledge and Data Engineering (TKDE), 2022.
 
 <p align="center">
 <img src="./figures/MTGODE.png" width="1200">
@@ -77,7 +77,7 @@ If you use this code in your research, please cite the following article:
 @article{jin2022multivariate,
   title={Multivariate Time Series Forecasting with Dynamic Graph Neural ODEs},
   author={Jin, Ming and Zheng, Yu and Li, Yuan-Fang and Chen, Siheng and Yang, Bin and Pan, Shirui},
-  journal={arXiv preprint arXiv:2202.08408},
+  journal={IEEE Transactions on Knowledge and Data Engineering (TKDE)},
   year={2022}
 }
 ```
